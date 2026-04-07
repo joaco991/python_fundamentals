@@ -1,0 +1,149 @@
+#Creating function thar allows to decipher a received message that was creatied by a general version of Ceasar Cipher.
+import string as s
+
+def r_cipher(message, offset = 3):
+    abc = list(s.ascii_lowercase) * 2
+    new_mess = []
+	
+    for char in message:
+        if char in abc:
+            i = abc.index(char)
+            new_mess.append(abc[i+offset])
+			
+        else: new_mess.append(char)
+		
+    new_message = ''.join(new_mess)
+    return new_message
+
+#A variable mes is created and the message from the first task is asigned to it.
+mes = "xuo jxuhu! jxyi yi qd unqcfbu ev q squiqh syfxuh. muhu oek qrbu je tusetu yj? y xefu ie! iudt cu q cuiiqwu rqsa myjx jxu iqcu evviuj!"
+
+#Here the function goes into effect. To try delete its #.
+#print(r_cipher(mes, 10))
+
+
+#Creating a function, that allows to cipher a new message.
+def s_cipher(message, offset = 3):
+    abc = list(s.ascii_lowercase)
+    new_mess = []
+	
+    for char in message:
+        if char in abc:
+            i = abc.index(char)
+            new_mess.append(abc[i-offset])
+			
+        else: new_mess.append(char)
+		
+    new_message = ''.join(new_mess)
+    return new_message
+
+#Assigning the message to a variable, the cciphered message to a new variable and printing this new ciphered message.
+mes = "hey there, here is my message. great finding my friend."
+mes2 = s_cipher(mes, 10)
+
+print(mes2)
+
+#To verify that it was correctly ciphered, you can decipher it and you must find the original message. Delete the following # to try this.
+#print(r_cipher(mes2, 10))
+
+
+#Here I am receiving 2 new message2. I proceed to decipher them with the r_cipher function, knowing that the first offset is 10.
+mes3 = "jxu evviuj veh jxu iusedt cuiiqwu yi vekhjuud."
+#print(r_cipher(mes3, 10))
+
+#The second offset was defined as 14 by the last message.
+mes4 = "bqdradyuzs ygxfubxq omqemd oubtqde fa oapq kagd yqeemsqe ue qhqz yadq eqogdq!"
+#print(r_cipher(mes4, 14))
+
+#In this case I do not know the offset, so I must go through all the options. The offset was 7.
+mes5 = "vhfinmxkl atox kxgwxkxw tee hy maxlx hew vbiaxkl hulhexmx. px'ee atox mh kxteer lmxi ni hnk ztfx by px ptgm mh dxxi hnk fxlltzxl ltyx."
+for i in range(1,27):
+    abc = list(s.ascii_lowercase)
+    print(f"Offset: {i}")
+    print(r_cipher(mes5,i))
+
+#print(r_cipher(mes5,7))   
+
+
+#The Vigenere Cipher is a little harder and I had to create subfunctions not to repeat methods.
+abc = list(s.ascii_lowercase)
+abc_2 = list(s.ascii_lowercase) * 2
+
+#This function creates a list, originally a list created from the message, but replacing each character for a letter of the key word, orderly.
+def key_message(message, key):
+    kmessage = []
+    index = 0 
+        
+    for char in message:
+        if char in abc and index < len(key):
+            kmessage.append(key[index])
+            index += 1
+            if index == len(key):
+                index = 0
+        else: kmessage.append(char)
+            
+    return kmessage
+
+#This function creates a list where replaces the letters of each text/message for the index in the list abc.
+def letters_to_index(message):
+    indexed_listed_message = []
+    for char in message:        
+        if char in abc:
+            indexed_listed_message.append(abc.index(char))
+        else: indexed_listed_message.append(char)
+    return indexed_listed_message
+
+
+#Using the subfunctions descripted, I created the new function r_vigenere to decipher the messages received. The key is a must.
+def r_vigenere(message, key):
+    list_message = list(message)
+    real_message_list = []
+    
+    key_list = key_message(message, key)
+
+    list_mess_index = letters_to_index(list_message)
+    list_key_message_index = letters_to_index(key_list)
+
+    for i in range(len(list_mess_index)):
+        if list_message[i] in abc:
+            a = list_key_message_index[i] + list_mess_index[i]
+            real_message_list.append(abc_2[a])
+        else: real_message_list.append(list_mess_index[i])
+
+    real_message = ''.join(real_message_list)
+    return real_message
+
+#Here is a ciphered message received, that must be deciphered, it is known that the key word is 'friends'.
+mes6 = "txm srom vkda gl lzlgzr qpdb? fepb ejac! ubr imn tapludwy mhfbz cza ruxzal wg zztcgcexxch!"
+#print(r_vigenere(mes6, 'friends'))
+
+
+#Using a similar but opposite function, I can create ciphered messages. Always using a known keyword.
+def s_vigenere(message, key):
+    list_message = list(message)
+    new_message_list = []
+    
+    key_list = key_message(message, key)
+
+    list_mess_index = letters_to_index(list_message)
+    list_key_message_index = letters_to_index(key_list)
+
+    for i in range(len(list_mess_index)):
+        if list_message[i] in abc:
+            if list_key_message_index[i] > list_mess_index[i]:
+                a = 26 + list_mess_index[i] - list_key_message_index[i]
+            else: a = list_mess_index[i] - list_key_message_index[i]
+            new_message_list.append(abc_2[a])
+        else: new_message_list.append(list_mess_index[i])
+
+    new_message = ''.join(new_message_list)
+    return new_message
+
+
+#By susing the function s_vigenere I can take this message and send it ciphered.
+mes7 = "this has to be clear if you know the key word: friends"
+
+mes8 = s_vigenere(mes7, 'friends')
+print(mes8)
+#To verify the function, r_vigenere can be used. Delete de following # to see the desiphered message.
+#print(r_vigenere(mes8, 'friends'))
