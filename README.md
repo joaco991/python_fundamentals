@@ -6,3 +6,4 @@ Mini projects published (data given by Codecademy):
   - String_Methods
   - Python_Strings_Medical_Insurance
   - Coded_Correspondence
+  - Hurricane Analysis (Done, incoming)
